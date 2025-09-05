@@ -1,7 +1,7 @@
 # 💸 FinTrack: AI-Powered Personal Finance for Students
 
 <p align="center">
-  <img src="https://placehold.co/700x350.png" alt="FinTrack Application Screenshot" data-ai-hint="app screenshot" />
+  <img src="assests/Landing_page.png" data-ai-hint="app screenshot" />
 </p>
 
 <p align="center">
