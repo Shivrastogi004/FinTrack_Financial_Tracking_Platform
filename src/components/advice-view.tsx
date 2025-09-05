@@ -11,20 +11,16 @@ import type { GetInvestmentAdviceOutput } from '@/ai/flows/get-investment-advice
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdviceView() {
-  const { goal } = useAppContext();
+  const { totalSavings } = useAppContext();
   const [advice, setAdvice] = useState<GetInvestmentAdviceOutput | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
-
-  const savings = useMemo(() => {
-    return goal.currentAmount;
-  }, [goal]);
 
   const handleGetAdvice = async () => {
     setIsGenerating(true);
     setAdvice(null);
     try {
-      const result = await getInvestmentAdvice({ savings: Math.max(0, savings) }); // Ensure savings is not negative
+      const result = await getInvestmentAdvice({ savings: Math.max(0, totalSavings) }); // Ensure savings is not negative
       setAdvice(result);
     } catch (error) {
       console.error("Failed to get investment advice:", error);
@@ -86,16 +82,16 @@ export default function AdviceView() {
         <div className="lg:col-span-2 space-y-6">
           <Card className="text-center">
             <CardHeader>
-              <CardTitle>Your Current Savings Towards Your Goal</CardTitle>
+              <CardTitle>Your Current Total Savings</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className={`text-5xl font-bold ${savings >= 0 ? 'text-foreground' : 'text-destructive'}`}>
-                ${savings.toFixed(2)}
+              <p className={`text-5xl font-bold ${totalSavings >= 0 ? 'text-foreground' : 'text-destructive'}`}>
+                ${totalSavings.toFixed(2)}
               </p>
-              <p className="text-sm text-muted-foreground">This is the amount you've saved in your '{goal.name}' goal.</p>
+              <p className="text-sm text-muted-foreground">This is the amount you've saved across all your goals.</p>
             </CardContent>
             <CardFooter>
-              <Button onClick={handleGetAdvice} className="w-full" disabled={isGenerating || savings < 1}>
+              <Button onClick={handleGetAdvice} className="w-full" disabled={isGenerating || totalSavings < 1}>
                 {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
                 {isGenerating ? 'Thinking...' : 'Get AI Investment Advice'}
               </Button>

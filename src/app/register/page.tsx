@@ -16,7 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function RegisterPage() {
     const router = useRouter();
-    const { register, user, loading } = useAuth();
+    const { register, loginWithGoogle, user, loading } = useAuth();
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
@@ -47,6 +47,17 @@ export default function RegisterPage() {
                 description: error.message || 'An unexpected error occurred.',
                 variant: 'destructive',
             });
+            setIsSubmitting(false);
+        }
+    };
+
+     const handleGoogleLogin = async () => {
+        setIsSubmitting(true);
+        try {
+            await loginWithGoogle();
+            // Let the useEffect handle the redirect
+        } catch (error) {
+            // Error is already handled by toast in auth context
             setIsSubmitting(false);
         }
     };
@@ -97,6 +108,14 @@ export default function RegisterPage() {
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Create an account
             </Button>
+            <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={isSubmitting}>
+              {isSubmitting ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                 <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-72.2 68.7C297.6 112.5 275.2 104 248 104c-58.4 0-108.3 49.3-115.1 113.8h230.8c2.1-12.2 3.2-24.6 3.2-37.2zM248 40C129.1 40 32 137.1 32 256s97.1 216 216 216c125.4 0 216-91.3 216-210.3 0-15.3-.9-30.2-2.7-44.9H248v89.8h138.8c-6.1 31.3-24.7 59.8-50.8 77.8z"></path></svg>
+              )}
+              Sign up with Google
+            </Button>
           </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{' '}
@@ -115,7 +134,7 @@ export default function RegisterPage() {
                 <CardContent>
                     <ul className="space-y-4 text-sm text-muted-foreground">
                         <li className="flex items-start">
-                            <ArrowRight className="w-4 h-4 mr-2 mt-1 text-primary shrink-0"/> 
+                            <ArrowRight className="w-4 w-4 mr-2 mt-1 text-primary shrink-0"/> 
                             <span>Track every penny with smart, AI-powered categorization.</span>
                         </li>
                         <li className="flex items-start">

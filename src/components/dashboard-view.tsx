@@ -22,7 +22,7 @@ import type { GetFinancialHealthOutput } from '@/ai/flows/get-financial-health';
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#00C49F', '#FFBB28'];
 
 export default function DashboardView() {
-  const { transactions, budgets, goal } = useAppContext();
+  const { transactions, budgets, goals, totalSavings } = useAppContext();
   const [healthAnalysis, setHealthAnalysis] = useState<GetFinancialHealthOutput | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
@@ -89,6 +89,10 @@ export default function DashboardView() {
       .slice(0, 5);
   }, [transactions]);
 
+  const mainGoal = useMemo(() => {
+    return goals.length > 0 ? goals[0] : null;
+  }, [goals]);
+
   const handleRunAnalysis = async () => {
     setIsAnalyzing(true);
     setHealthAnalysis(null);
@@ -96,7 +100,7 @@ export default function DashboardView() {
       const result = await getFinancialHealth({
         income: totalIncome,
         spending: totalSpending,
-        goalProgress: (goal.currentAmount / goal.targetAmount) * 100,
+        goalProgress: mainGoal ? (mainGoal.currentAmount / mainGoal.targetAmount) * 100 : 0,
       });
       setHealthAnalysis(result);
     } catch (error) {
@@ -133,22 +137,22 @@ export default function DashboardView() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Net Cash Flow</CardTitle>
+              <CardTitle className="text-sm font-medium">Net Savings</CardTitle>
               <span className={`text-sm ${netFlow >= 0 ? 'text-green-500' : 'text-red-500'}`}>{netFlow >= 0 ? '▲' : '▼'}</span>
             </CardHeader>
             <CardContent>
               <div className={`text-2xl font-bold ${netFlow >= 0 ? 'text-green-500' : 'text-red-500'}`}>${netFlow.toFixed(2)}</div>
-               <p className="text-xs text-muted-foreground">Compared to last month</p>
+               <p className="text-xs text-muted-foreground">This is your income minus expenses</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Financial Goal</CardTitle>
+              <CardTitle className="text-sm font-medium">Primary Goal Progress</CardTitle>
               <Goal className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
-               <div className="text-2xl font-bold">{((goal.currentAmount/goal.targetAmount)*100).toFixed(0)}%</div>
-               <p className="text-xs text-muted-foreground">{goal.name}</p>
+               <div className="text-2xl font-bold">{mainGoal ? `${((mainGoal.currentAmount/mainGoal.targetAmount)*100).toFixed(0)}%` : 'N/A'}</div>
+               <p className="text-xs text-muted-foreground">{mainGoal ? mainGoal.name : 'No goal set'}</p>
             </CardContent>
           </Card>
       </div>
@@ -328,5 +332,3 @@ export default function DashboardView() {
     </div>
   );
 }
-
-    

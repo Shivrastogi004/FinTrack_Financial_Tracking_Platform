@@ -23,6 +23,7 @@ export interface Goal {
   name: string;
   targetAmount: number;
   currentAmount: number;
+  allocation: number; // Percentage (0-100)
 }
 
 export interface Achievement {
@@ -43,7 +44,7 @@ export interface Profile {
 export interface AppData {
   transactions: Transaction[];
   budgets: Budget[];
-  goal: Goal;
+  goals: Goal[];
   achievements: Achievement[];
   profile: Profile;
   lastLoginDate: string;

@@ -20,12 +20,15 @@ const defaultProfile: Profile = {
     graduationYear: new Date().getFullYear() + 4,
 };
 
-const defaultGoal: Goal = {
-  id: 'g1',
-  name: 'Save for a new laptop',
-  targetAmount: 500,
-  currentAmount: 0,
-};
+const defaultGoals: Goal[] = [
+  {
+    id: 'g1',
+    name: 'Save for a new laptop',
+    targetAmount: 500,
+    currentAmount: 0,
+    allocation: 100,
+  },
+];
 
 const defaultAchievements: Achievement[] = [
     { id: 'budget-master-food', name: 'Budget Master: Food', description: 'Keep your food spending under budget for a month.', achieved: false },
@@ -42,7 +45,7 @@ const defaultAchievements: Achievement[] = [
 export const defaultData: AppData = sanitizeObject({
     transactions: [],
     budgets: [],
-    goal: defaultGoal,
+    goals: defaultGoals,
     achievements: defaultAchievements,
     profile: defaultProfile,
     lastLoginDate: new Date().toISOString().split('T')[0],
@@ -59,8 +62,12 @@ interface AppContextType {
   budgets: Budget[];
   addBudget: (budget: Budget) => void;
   updateBudget: (budget: Budget) => void;
-  goal: Goal;
-  setGoal: (goal: Omit<Goal, 'currentAmount'>) => void;
+  goals: Goal[];
+  addGoal: (goal: Omit<Goal, 'id' | 'currentAmount'>) => void;
+  updateGoal: (goal: Omit<Goal, 'currentAmount'>) => void;
+  updateMultipleGoals: (goals: Omit<Goal, 'currentAmount'>[]) => void;
+  deleteGoal: (id: string) => void;
+  totalSavings: number;
   dailyStreak: number;
   setDailyStreak: (streak: number) => void;
   lastLoginDate: string;
@@ -130,18 +137,35 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const transactions = appData.transactions || [];
   const budgets = appData.budgets || [];
-  const goalDetails = appData.goal || defaultGoal;
+  const goalDetails = Array.isArray(appData.goals) ? appData.goals : defaultGoals;
   const dailyStreak = appData.dailyStreak || 1;
   const lastLoginDate = appData.lastLoginDate || new Date().toISOString().split('T')[0];
   const achievements = appData.achievements || defaultAchievements;
   const profile = appData.profile || defaultProfile;
 
-  const goal = useMemo(() => {
-    const currentAmount = transactions
-        .filter(t => t.category === 'Savings Goal')
-        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-    return { ...goalDetails, currentAmount };
-  }, [transactions, goalDetails]);
+ const { totalIncome, totalSpending } = useMemo(() => {
+    return transactions.reduce(
+      (acc, t) => {
+        if (t.amount < 0) {
+          acc.totalIncome += Math.abs(t.amount);
+        } else {
+          acc.totalSpending += t.amount;
+        }
+        return acc;
+      },
+      { totalIncome: 0, totalSpending: 0 }
+    );
+  }, [transactions]);
+
+  const totalSavings = useMemo(() => Math.max(0, totalIncome - totalSpending), [totalIncome, totalSpending]);
+
+  const goals = useMemo(() => {
+    return goalDetails.map(g => ({
+      ...g,
+      currentAmount: (totalSavings * g.allocation) / 100,
+    }));
+  }, [goalDetails, totalSavings]);
+
 
   const addTransaction = (transaction: Transaction) => {
     const newTransactions = [transaction, ...transactions];
@@ -173,10 +197,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateFirestore({ budgets: newBudgets });
   };
   
-  const setGoal = (newGoalDetails: Omit<Goal, 'currentAmount'>) => {
-    const newGoal = { ...newGoalDetails, currentAmount: goal.currentAmount };
-    updateFirestore({ goal: sanitizeObject(newGoal) });
+  const addGoal = (goal: Omit<Goal, 'id' | 'currentAmount'>) => {
+    const newGoal: Goal = { ...goal, id: crypto.randomUUID(), currentAmount: 0 };
+    const newGoals = [...goalDetails, newGoal];
+    updateFirestore({ goals: sanitizeObject(newGoals) });
   };
+  
+  const updateGoal = (updatedGoal: Omit<Goal, 'currentAmount'>) => {
+    const newGoals = goalDetails.map(g => g.id === updatedGoal.id ? { ...g, ...updatedGoal } : g);
+    updateFirestore({ goals: sanitizeObject(newGoals) });
+  };
+
+  const updateMultipleGoals = (updatedGoals: Omit<Goal, 'currentAmount'>[]) => {
+    updateFirestore({ goals: sanitizeObject(updatedGoals) });
+  };
+
+  const deleteGoal = (id: string) => {
+    const newGoals = goalDetails.filter(g => g.id !== id);
+    updateFirestore({ goals: sanitizeObject(newGoals) });
+  }
 
   const setDailyStreak = (streak: number) => {
       updateFirestore({ dailyStreak: streak });
@@ -250,16 +289,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
             nextDueDate: undefined,
           });
           
+          let nextDate;
           switch (t.recurrencePeriod) {
-            case 'daily': nextDueDate = addDays(nextDueDate, 1); break;
-            case 'weekly': nextDueDate = addWeeks(nextDueDate, 1); break;
-            case 'monthly': nextDueDate = addMonths(nextDueDate, 1); break;
-            case 'yearly': nextDueDate = addYears(nextDueDate, 1); break;
+            case 'daily': nextDate = addDays(nextDueDate, 1); break;
+            case 'weekly': nextDate = addWeeks(nextDueDate, 1); break;
+            case 'monthly': nextDate = addMonths(nextDueDate, 1); break;
+            case 'yearly': nextDate = addYears(nextDueDate, 1); break;
             default: 
               // Break the loop if something is wrong
-              nextDueDate = addYears(nextDueDate, 100); 
+              nextDate = addYears(nextDueDate, 100); 
               break;
           }
+          nextDueDate = nextDate;
         }
         
         // Return the master transaction with its next due date updated
@@ -305,8 +346,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     budgets,
     addBudget,
     updateBudget,
-    goal,
-    setGoal,
+    goals,
+    addGoal,
+    updateGoal,
+    updateMultipleGoals,
+    deleteGoal,
+    totalSavings,
     dailyStreak,
     setDailyStreak,
     lastLoginDate,
@@ -316,7 +361,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     profile,
     updateProfile,
     isDataLoading,
-  }), [transactions, budgets, goal, dailyStreak, lastLoginDate, achievements, profile, isDataLoading, unlockAchievement, updateProfile, addTransaction, updateTransaction, deleteTransaction, addMultipleTransactions, addBudget, updateBudget, setGoal, setDailyStreak, setLastLoginDate]);
+  }), [transactions, budgets, goals, totalSavings, dailyStreak, lastLoginDate, achievements, profile, isDataLoading, unlockAchievement, updateProfile, addTransaction, updateTransaction, deleteTransaction, addMultipleTransactions, addBudget, updateBudget, addGoal, updateGoal, updateMultipleGoals, deleteGoal, setDailyStreak, setLastLoginDate]);
 
   return (
     <AppContext.Provider value={value}>
