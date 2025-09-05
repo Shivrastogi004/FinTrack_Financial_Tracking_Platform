@@ -44,26 +44,26 @@ graph TD
         direction LR
         A(Start) --> B[Visit FinTrack];
         B --> C{Login or Register?};
-        C -- "New User" --> D[<img src='https://www.gstatic.com/images/icons/material/symbols/person_add_rounded.svg' style='width: 20px; vertical-align: middle; margin-right: 5px;' /> Register Page];
-        C -- "Existing User" --> E[<img src='https://www.gstatic.com/images/icons/material/symbols/login_rounded.svg' style='width: 20px; vertical-align: middle; margin-right: 5px;' /> Login Page];
-        D --> F((<img src='https://www.gstatic.com/images/icons/material/symbols/dashboard_customize_rounded.svg' style='width: 40px; filter: invert(1);' />));
+        C -- "New User" --> D[Register Page];
+        C -- "Existing User" --> E[Login Page];
+        D --> F((Dashboard));
         E --> F;
         E -- "Forgot?" --> Pw[Forgot Password?];
         Pw -.-> E;
     end
 
     subgraph "Core App Experience"
-        F[Dashboard] --> G[<img src='https://www.gstatic.com/images/icons/material/symbols/receipt_long_rounded.svg' style='width: 20px; vertical-align: middle; margin-right: 5px;' /> Transactions];
-        F --> H[<img src='https://www.gstatic.com/images/icons/material/symbols/target_rounded.svg' style='width: 20px; vertical-align: middle; margin-right: 5px;' /> Budgets];
-        F --> I[<img src='https://www.gstatic.com/images/icons/material/symbols/savings_rounded.svg' style='width: 20px; vertical-align: middle; margin-right: 5px;' /> Goals];
-        F --> J[<img src='https://www.gstatic.com/images/icons/material/symbols/military_tech_rounded.svg' style='width: 20px; vertical-align: middle; margin-right: 5px;' /> Achievements];
-        F --> K[<img src='https://www.gstatic.com/images/icons/material/symbols/query_stats_rounded.svg' style='width: 20px; vertical-align: middle; margin-right: 5px;' /> AI Advisor];
+        F --> G[Transactions];
+        F --> H[Budgets];
+        F --> I[Goals];
+        F --> J[Achievements];
+        F --> K[AI Advisor];
     end
 
     subgraph "Money & Data Flow"
         G -- "Add/Edit" --> T1[Manual Entry];
-        G -- "Import" --> T2(🤖 Smart Import);
-        T1 & T2 ==> TX_DB[(<img src='https://www.gstatic.com/images/icons/material/symbols/database_rounded.svg' style='width: 20px; vertical-align: middle; margin-right: 5px;' /> Transactions DB)];
+        G -- "Import" --> T2(Smart Import);
+        T1 & T2 ==> TX_DB[(Transactions DB)];
         
         TX_DB -- "Calculate Net Savings" --> S{Total Savings};
         I -- "Set Allocations" --> S;
@@ -74,12 +74,12 @@ graph TD
 
     subgraph "AI-Powered Actions"
         style AIFeatures fill:#f3e8ff,stroke:#6A1B9A
-        T2 -- "Analyze Document" --> AI1[<img src='https://www.gstatic.com/images/icons/material/symbols/auto_awesome_rounded.svg' style='width: 16px; vertical-align: middle; margin-right: 2px;' /> Extract Transactions];
-        I -- "Smart Allocate" --> AI2[<img src='https://www.gstatic.com/images/icons/material/symbols/auto_awesome_rounded.svg' style='width: 16px; vertical-align: middle; margin-right: 2px;' /> Suggest Allocations];
-        K -- "Request Advice" --> AI3[<img src='https://www.gstatic.com/images/icons/material/symbols/auto_awesome_rounded.svg' style='width: 16px; vertical-align: middle; margin-right: 2px;' /> Get Investment Advice];
-        F -- "Health Check" --> AI4[<img src='https://www.gstatic.com/images/icons/material/symbols/auto_awesome_rounded.svg' style='width: 16px; vertical-align: middle; margin-right: 2px;' /> Analyze Finances];
+        T2 -- "Analyze Document" --> AI1["🤖 Extract Transactions"];
+        I -- "Smart Allocate" --> AI2["🤖 Suggest Allocations"];
+        K -- "Request Advice" --> AI3["🤖 Get Investment Advice"];
+        F -- "Health Check" --> AI4["🤖 Analyze Finances"];
         
-        AI1 & AI2 & AI3 & AI4 -.-> Gemini[<img src='https://www.gstatic.com/images/branding/googlelogo/1x/googlelogo_color_28dp.png' style='width: 16px; vertical-align: middle; margin-right: 5px;' /> Google AI];
+        AI1 & AI2 & AI3 & AI4 -.-> Gemini["Google AI"];
     end
 
     classDef core fill:#e0f2fe,stroke:#0284c7,stroke-width:2px;
