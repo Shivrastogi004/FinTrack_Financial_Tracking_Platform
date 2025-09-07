@@ -34,65 +34,111 @@ FinTrack is packed with intelligent features to make financial management seamle
 - **🔒 Secure Authentication**: Robust and secure user login and registration with both email/password and Google Sign-In, including a "Forgot Password" feature.
 - **💬 AI Help Assistant**: Have a question? Our friendly AI chatbot is available to provide instant help and answers about the application.
 
-## 🌊 User Flow
+## 🌊 User Flow — with Flowing Money (GitHub-safe Mermaid)
 
-Here’s a high-level overview of the user journey through FinTrack:
+Here’s a cleaned-up, GitHub-compatible version. It “simulates” motion by passing multiple 💵 tokens through the loop (no animation in Markdown, but the repeated tokens convey flow).
 
 ```mermaid
-graph TD
-    subgraph "User Onboarding"
-        direction LR
-        A(Start) --> B[Visit FinTrack];
-        B --> C{Login or Register?};
-        C -- "New User" --> D[Register Page];
-        C -- "Existing User" --> E[Login Page];
-        D --> F((Dashboard));
-        E --> F;
-        E -- "Forgot?" --> Pw[Forgot Password?];
-        Pw -.-> E;
-    end
+flowchart TD
 
-    subgraph "Core App Experience"
-        F --> G[Transactions];
-        F --> H[Budgets];
-        F --> I[Goals];
-        F --> J[Achievements];
-        F --> K[AI Advisor];
-    end
+%% =========================
+%% USER ONBOARDING
+%% =========================
+  subgraph Onboarding["🚪 User Onboarding"]
+    direction LR
+    A([Start]) --> B[Visit FinTrack]
+    B --> C{Login or Register?}
+    C -- "New User" --> D[Register Page]
+    C -- "Existing User" --> E[Login Page]
+    E -- "Forgot?" --> Pw[Forgot Password?]
+    Pw -.-> E
+    D --> F((🏠 Dashboard))
+    E --> F
+  end
 
-    subgraph "Money & Data Flow"
-        G -- "Add/Edit" --> T1[Manual Entry];
-        G -- "Import" --> T2(Smart Import);
-        T1 & T2 ==> TX_DB[(Transactions DB)];
-        
-        TX_DB -- "Calculate Net Savings" --> S{Total Savings};
-        I -- "Set Allocations" --> S;
-        S -- "Distribute %" --> I;
-        
-        H & I & K -- "Read Data" --> TX_DB;
-    end
+%% =========================
+%% CORE EXPERIENCE
+%% =========================
+  subgraph Core["📱 Core App Experience"]
+    direction LR
+    F --> G[💸 Transactions]
+    F --> H[🎯 Budgets]
+    F --> I[🌱 Goals]
+    F --> J[🏆 Achievements]
+    F --> K[💡 AI Advisor]
+  end
 
-    subgraph "AI-Powered Actions"
-        style AIFeatures fill:#f3e8ff,stroke:#6A1B9A
-        T2 -- "Analyze Document" --> AI1["🤖 Extract Transactions"];
-        I -- "Smart Allocate" --> AI2["🤖 Suggest Allocations"];
-        K -- "Request Advice" --> AI3["🤖 Get Investment Advice"];
-        F -- "Health Check" --> AI4["🤖 Analyze Finances"];
-        
-        AI1 & AI2 & AI3 & AI4 -.-> Gemini["Google AI"];
-    end
+%% =========================
+%% MONEY & DATA FLOW
+%% =========================
+  subgraph Data["💾 Money & Data Flow"]
+    direction LR
+    G -- "Add/Edit" --> T1[Manual Entry]
+    G -- "Import" --> T2[Smart Import]
+    T1 --> TX_DB[(🗄️ Transactions DB)]
+    T2 --> TX_DB
 
-    classDef core fill:#e0f2fe,stroke:#0284c7,stroke-width:2px;
-    class F,G,H,I,J,K core;
-    
-    classDef auth fill:#e0e7ff,stroke:#4338ca,stroke-width:2px;
-    class A,B,C,D,E,Pw auth;
-    
-    classDef money fill:#dcfce7,stroke:#16a34a,stroke-width:2px;
-    class T1,T2,TX_DB,S money;
-    
-    classDef ai fill:#fffbe6,stroke:#f59e0b,stroke-width:2px;
-    class AI1,AI2,AI3,AI4,Gemini ai;
+    TX_DB -- "Calculate Net Savings" --> S{Σ Net Savings}
+    I -- "Set Allocations" --> S
+    S -- "Distribute %" --> I
+
+    H --> TX_DB
+    I --> TX_DB
+    K --> TX_DB
+  end
+
+%% =========================
+%% AI-POWERED ACTIONS
+%% =========================
+  subgraph AIFeatures["🧠 AI-Powered Actions"]
+    direction LR
+    T2 -- "Analyze Document" --> AI1["🤖 Extract Transactions"]
+    I  -- "Smart Allocate" --> AI2["🤖 Suggest Allocations"]
+    K  -- "Request Advice" --> AI3["🤖 Investment Advice"]
+    F  -- "Health Check" --> AI4["🤖 Analyze Finances"]
+    AI1 -.-> Gemini["Google AI (Gemini)"]
+    AI2 -.-> Gemini
+    AI3 -.-> Gemini
+    AI4 -.-> Gemini
+  end
+
+%% =========================
+%% 💸 FLOWING CASH STREAM (motion-like)
+%% =========================
+  %% Repeated money tokens looping through the core stages
+  M1(((💵))) --> G
+  G --> M2(((💵)))
+  M2 --> TX_DB
+  TX_DB --> M3(((💵)))
+  M3 --> H
+  H --> M4(((💵)))
+  M4 --> I
+  I --> M5(((💵)))
+  M5 --> K
+  K --> M6(((💵)))
+  M6 --> F
+  F --> M7(((💵)))
+  M7 --> G
+
+%% =========================
+%% CLASS STYLES (kept simple for GitHub compatibility)
+%% =========================
+  classDef core fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0b365a;
+  class F,G,H,I,J,K core;
+
+  classDef auth fill:#e0e7ff,stroke:#4338ca,stroke-width:2px,color:#1f2a80;
+  class A,B,C,D,E,Pw auth;
+
+  classDef money fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#0b3d1f;
+  class T1,T2,TX_DB,S money;
+
+  classDef ai fill:#fffbe6,stroke:#f59e0b,stroke-width:2px,color:#7a4b00;
+  class AI1,AI2,AI3,AI4,Gemini ai;
+
+  classDef token fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#065f46;
+  class M1,M2,M3,M4,M5,M6,M7 token;
+
+
 ```
 
 ## 🛠️ Tech Stack
