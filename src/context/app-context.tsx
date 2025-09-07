@@ -195,7 +195,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                 case 'daily': nextDueDate = addDays(nextDueDate, 1); break;
                 case 'weekly': nextDueDate = addWeeks(nextDueDate, 1); break;
                 case 'monthly': nextDueDate = addMonths(nextDueDate, 1); break;
-                case 'yearly': nextDueDate = addYears(nextDueDate, 1); break;
+                case 'yearly': nextDate = addYears(nextDueDate, 1); break;
                 default:
                     // Stop if recurrence is not defined
                     nextDueDate = addYears(nextDueDate, 100);
@@ -214,7 +214,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     } else {
         // It's a regular, non-recurring transaction
-        const updatedTransactions = [transaction, ...transactions];
+        const updatedTransactions = [{...transaction, recurrencePeriod: null, nextDueDate: null}, ...transactions];
         updateFirestore({ transactions: updatedTransactions });
     }
   };
@@ -225,7 +225,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const updateTransaction = (updatedTransaction: Transaction) => {
-    const newTransactions = transactions.map(t => t.id === updatedTransaction.id ? updatedTransaction : t)
+    const newTransactions = transactions.map(t => t.id === updatedTransaction.id ? sanitizeObject(updatedTransaction) as Transaction : t)
     updateFirestore({ transactions: newTransactions });
   };
   
@@ -295,8 +295,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
         updateFirestore({ achievements: newAchievements });
         setTimeout(() => {
             toast({
-                title: 'Achievement Unlocked!',
-                description: `🏆 You've earned the "${achievementName}" medal.`,
+                title: (
+                    <div className="flex items-center gap-2">
+                        <Trophy className="h-5 w-5 text-amber-400" />
+                        <span className="font-semibold">Achievement Unlocked!</span>
+                    </div>
+                ),
+                description: `You've earned the "${achievementName}" medal.`,
             });
         }, 500);
     }

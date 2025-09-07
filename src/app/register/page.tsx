@@ -67,14 +67,14 @@ export default function RegisterPage() {
     }
 
   return (
-     <div className="w-full lg:grid lg:min-h-[100vh] lg:grid-cols-2 xl:min-h-[100vh]">
-      <div className="flex items-center justify-center py-12">
-        <div className="mx-auto grid w-[400px] gap-6">
+     <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2">
+      <div className="flex items-center justify-center py-12 px-4">
+        <div className="mx-auto grid w-full max-w-[400px] gap-6">
           <div className="grid gap-2 text-center">
-             <div className="flex justify-center items-center gap-2 mb-4">
+             <Link href="/" className="flex justify-center items-center gap-2 mb-4">
                 <Logo className="h-8 w-8" />
                 <h1 className="text-3xl font-bold">FinTrack</h1>
-            </div>
+            </Link>
             <p className="text-balance text-muted-foreground">
                 Create an account to start managing your finances.
             </p>
@@ -119,7 +119,7 @@ export default function RegisterPage() {
           </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{' '}
-            <Link href="/" className="underline">
+            <Link href="/login" className="underline">
               Sign in
             </Link>
           </div>
@@ -134,7 +134,7 @@ export default function RegisterPage() {
                 <CardContent>
                     <ul className="space-y-4 text-sm text-muted-foreground">
                         <li className="flex items-start">
-                            <ArrowRight className="w-4 w-4 mr-2 mt-1 text-primary shrink-0"/> 
+                            <ArrowRight className="w-4 h-4 mr-2 mt-1 text-primary shrink-0"/> 
                             <span>Track every penny with smart, AI-powered categorization.</span>
                         </li>
                         <li className="flex items-start">

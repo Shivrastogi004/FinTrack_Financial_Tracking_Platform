@@ -5,6 +5,7 @@ import { AuthProvider } from '@/context/auth-context';
 import Chatbot from '@/components/chatbot';
 
 export const metadata: Metadata = {
+  manifest: "/manifest.json",
   title: 'FinTrack',
   description: 'A personal finance optimizer for college students.',
 };

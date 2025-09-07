@@ -56,7 +56,7 @@ function AppContent() {
     if (!isMounted || loading) return;
 
     if (!user) {
-      router.push('/');
+      router.push('/login');
     } else if (isNewUser) {
         router.push('/dashboard?view=settings');
         // The view state will be updated by the next effect
@@ -126,56 +126,9 @@ function AppContent() {
 
   return (
     <SidebarProvider>
-       <div className="md:hidden p-2 flex justify-between items-center bg-card border-b sticky top-0 z-20 bg-background/95 backdrop-blur-sm">
-         <div className="flex items-center gap-2">
-            <Logo />
-            <h1 className="text-lg font-bold">FinTrack</h1>
-          </div>
-        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <PanelLeft />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-64 bg-sidebar text-sidebar-foreground">
-            <SidebarHeader className="p-2 border-b">
-               <div className="flex items-center gap-2 text-sidebar-foreground p-2">
-                    <Logo />
-                    <span className="text-lg font-bold">FinTrack</span>
-                </div>
-            </SidebarHeader>
-            <SidebarContent className="p-0">
-                <NavContent />
-            </SidebarContent>
-             <SidebarFooter className="p-2 border-t">
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton onClick={() => navigateTo('settings')}>
-                            <Settings />
-                            <span>Settings</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton onClick={() => navigateTo('help')}>
-                            <LifeBuoy />
-                            <span>Help</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <SidebarMenuButton onClick={logout}>
-                            <LogOut />
-                            <span>Log Out</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-             </SidebarFooter>
-          </SheetContent>
-        </Sheet>
-      </div>
-
       <Sidebar>
         <SidebarHeader className="border-b">
-          <div className="flex items-center gap-2 text-sidebar-foreground p-2">
+          <div className="flex items-center gap-2 p-2">
             <Logo />
             <span className="text-lg font-bold group-data-[collapsible=icon]:hidden">FinTrack</span>
           </div>
@@ -210,7 +163,7 @@ function AppContent() {
                     <AvatarFallback>{profile?.firstName?.[0].toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-0.5 text-xs group-data-[collapsible=icon]:hidden">
-                    <div className="font-medium text-sidebar-foreground">{profile?.firstName} {profile?.lastName}</div>
+                    <div className="font-medium text-foreground">{profile?.firstName} {profile?.lastName}</div>
                     <div className="text-muted-foreground">{user?.email}</div>
                 </div>
             </div>
@@ -218,14 +171,58 @@ function AppContent() {
       </Sidebar>
 
       <SidebarInset>
-        <header className="sticky top-0 z-10 hidden h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 md:flex">
-          <SidebarTrigger />
+        <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button size="icon" variant="outline" className="md:hidden">
+                <PanelLeft className="h-5 w-5" />
+                <span className="sr-only">Toggle Menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="p-0 w-64 bg-card sm:max-w-xs">
+              <SidebarHeader className="p-2 border-b">
+                <div className="flex items-center gap-2 p-2">
+                  <Logo />
+                  <span className="text-lg font-bold">FinTrack</span>
+                </div>
+              </SidebarHeader>
+              <SidebarContent className="p-0">
+                <NavContent />
+              </SidebarContent>
+              <SidebarFooter className="p-2 border-t">
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton onClick={() => navigateTo('settings')}>
+                      <Settings />
+                      <span>Settings</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton onClick={() => navigateTo('help')}>
+                      <LifeBuoy />
+                      <span>Help</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton onClick={logout}>
+                      <LogOut />
+                      <span>Log Out</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarFooter>
+            </SheetContent>
+          </Sheet>
+          <div className="flex items-center gap-2 md:hidden">
+            <Logo />
+            <h1 className="text-lg font-bold">FinTrack</h1>
+          </div>
         </header>
-        <div className="p-4 sm:p-6 flex-1 overflow-y-auto">
+        <main className="p-4 sm:p-6 flex-1 overflow-y-auto">
           <React.Suspense fallback={<div className="flex h-full w-full items-center justify-center">Loading view...</div>}>
             <ActiveComponent />
           </React.Suspense>
-        </div>
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

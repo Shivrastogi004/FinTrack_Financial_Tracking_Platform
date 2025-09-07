@@ -27,7 +27,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { useToast } from '@/hooks/use-toast';
-import { getSmartGoalAllocations } from '../ai/flows/get-smart-goal-allocations';
+import { getSmartGoalAllocations } from '@/ai/flows/get-smart-goal-allocations';
 
 
 const goalSchema = z.object({
@@ -62,11 +62,7 @@ export default function GoalsView() {
     if (editingGoal) {
       updateGoal({ ...editingGoal, ...data });
     } else {
-      addGoal({
-        name: data.name!,
-        targetAmount: data.targetAmount!,
-        allocation: data.allocation!
-      });
+      addGoal(data);
     }
     handleCloseDialog();
   };
@@ -115,17 +111,17 @@ export default function GoalsView() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex-1">
           <h1 className="text-3xl font-bold tracking-tight">Financial Goals</h1>
           <p className="text-muted-foreground">Your automatically allocated savings goals.</p>
         </div>
-         <div className="flex items-center gap-2">
-            <Button onClick={handleSmartAllocate} variant="outline" disabled={isAllocating || goals.length === 0}>
+         <div className="flex items-center gap-2 w-full sm:w-auto">
+            <Button onClick={handleSmartAllocate} variant="outline" disabled={isAllocating || goals.length === 0} className="w-1/2 sm:w-auto">
                 {isAllocating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
                 Smart Allocate
             </Button>
-            <Button onClick={() => handleOpenDialog()}>
+            <Button onClick={() => handleOpenDialog()} className="w-1/2 sm:w-auto">
                 <PlusCircle className="mr-2 h-4 w-4" /> Add Goal
             </Button>
         </div>

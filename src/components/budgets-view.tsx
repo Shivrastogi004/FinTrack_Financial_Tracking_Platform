@@ -51,9 +51,12 @@ export default function BudgetsView() {
 
   return (
     <div className="space-y-6">
-       <div className="flex items-center justify-between">
-         <h1 className="text-3xl font-bold tracking-tight">Budgets</h1>
-         <Button onClick={() => handleOpenDialog()}>
+       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+         <div className="flex-1">
+            <h1 className="text-3xl font-bold tracking-tight">Budgets</h1>
+            <p className="text-muted-foreground">Set and track monthly spending limits.</p>
+         </div>
+         <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto">
           <PlusCircle className="mr-2 h-4 w-4" /> Add Budget
         </Button>
        </div>

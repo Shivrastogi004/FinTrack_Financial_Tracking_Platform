@@ -59,7 +59,7 @@ export default function SettingsView() {
               <CardDescription>This information helps personalize your experience.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                  <FormField
                     control={form.control}
                     name="firstName"
@@ -102,7 +102,7 @@ export default function SettingsView() {
                     )}
                 />
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                     control={form.control}
                     name="degree"

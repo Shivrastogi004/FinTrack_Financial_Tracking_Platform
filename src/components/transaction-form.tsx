@@ -97,14 +97,10 @@ export function TransactionFormDialog({ transaction, onFinish }: { transaction?:
     const finalAmount = data.type === 'income' ? -Math.abs(data.amount) : Math.abs(data.amount);
     
     const newTransaction: Transaction = {
+      ...data,
       id: transaction?.id || crypto.randomUUID(),
       amount: finalAmount,
       date: data.date.toISOString(),
-      merchant: data.merchant,
-      category: data.category,
-      type: data.type,
-      isRecurring: data.isRecurring,
-      recurrencePeriod: data.recurrencePeriod,
       nextDueDate: undefined, // Default to undefined
     };
 

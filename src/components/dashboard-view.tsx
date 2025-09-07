@@ -9,12 +9,11 @@ import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format, startOfMonth } from 'date-fns';
 import { CategoryIcon } from './category-icon';
-import { BarChart, Bar, PieChart, Pie, Cell, Tooltip, Legend, XAxis, YAxis, CartesianGrid, Line, LineChart } from 'recharts';
+import { BarChart, Bar, PieChart, Pie, Cell, Tooltip, Legend, XAxis, YAxis, CartesianGrid, Line, LineChart, ResponsiveContainer } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 import type { ChartConfig } from '@/components/ui/chart';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight, Goal, Sparkles, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
-import { ResponsiveContainer } from 'recharts';
 import { getFinancialHealth } from '@/ai/flows/get-financial-health';
 import type { GetFinancialHealthOutput } from '@/ai/flows/get-financial-health';
 
@@ -159,15 +158,15 @@ export default function DashboardView() {
 
        <Card className="bg-primary/10 border-primary/20">
         <CardHeader>
-            <div className='flex items-center justify-between'>
-                <div>
+            <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
+                <div className="flex-1">
                     <CardTitle className="flex items-center gap-2 text-primary">
                         <Sparkles />
                         <span>AI Financial Health Check-up</span>
                     </CardTitle>
                     <CardDescription>Get personalized insights into your financial habits.</CardDescription>
                 </div>
-                <Button onClick={handleRunAnalysis} disabled={isAnalyzing}>
+                <Button onClick={handleRunAnalysis} disabled={isAnalyzing} className="w-full sm:w-auto">
                     {isAnalyzing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     Analyze My Finances
                 </Button>

@@ -12,16 +12,11 @@ export function cn(...inputs: ClassValue[]) {
  * @param obj The object to sanitize.
  * @returns A new object with `undefined` properties removed.
  */
-export function sanitizeObject<T>(obj: T): T {
-  if (typeof obj !== 'object' || obj === null) return obj;
-  if (Array.isArray(obj)) {
-    return obj.map(sanitizeObject) as T;
-  }
-  const newObj: any = {};
+export function sanitizeObject<T extends object>(obj: T): Partial<T> {
+  const newObj: Partial<T> = {};
   for (const key in obj) {
-    const value = (obj as any)[key];
-    if (value !== undefined) {
-      newObj[key] = sanitizeObject(value);
+    if (obj[key] !== undefined) {
+      newObj[key] = obj[key];
     }
   }
   return newObj;

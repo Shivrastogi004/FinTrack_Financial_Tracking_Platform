@@ -17,7 +17,7 @@ import {
   DialogClose,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { extractTransactionsFromDocument, type ExtractTransactionsOutput } from '../ai/flows/extract-transactions-from-document';
+import { extractTransactionsFromDocument, type ExtractTransactionsOutput } from '@/ai/flows/extract-transactions-from-document';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format } from 'date-fns';
 import { CategoryIcon } from './category-icon';
