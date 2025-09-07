@@ -1,6 +1,8 @@
 # 💸 FinTrack: AI-Powered Personal Finance for Students
 
 <p align="center">
+  <img src="assests/Home_page.png" data-ai-hint="app screenshot" />
+  
   <img src="assests/Landing_page.png" data-ai-hint="app screenshot" />
 </p>
 
